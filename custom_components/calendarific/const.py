@@ -29,3 +29,4 @@ DEFAULT_UNIT_OF_MEASUREMENT = "Days"
 CALENDAR_NAME = "Calendarific"
 SENSOR_PLATFORM = "sensor"
 CALENDAR_PLATFORM = "calendar"
+
