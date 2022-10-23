@@ -110,7 +110,7 @@ class EntitiesCalendarData:
             ):
                 continue
             entity = self._hass.data[DOMAIN][SENSOR_PLATFORM][ent]
-            _LOGGER.debug("Get Events: Entity: " + str(entity))
+            # _LOGGER.debug("Get Events: Entity: " + str(entity))
             if (
                 entity
                 and entity.name
@@ -135,7 +135,7 @@ class EntitiesCalendarData:
         for ent in self.entities:
             # _LOGGER.debug("Update Entity Name: " + str(ent))
             entity = self._hass.data[DOMAIN][SENSOR_PLATFORM][ent]
-            _LOGGER.debug("Update Entity: " + str(entity))
+            # _LOGGER.debug("Update Entity: " + str(entity))
             if entity and entity.name and entity._date:
                 self.event = CalendarEvent(
                     summary=entity.name,
