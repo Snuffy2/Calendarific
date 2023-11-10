@@ -8,13 +8,13 @@
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Snuffy2/Calendarific/hacs_validate.yml?branch=main&style=for-the-badge)](#calendarific)<br/>
 
 
-The `Calendarific` component is a Home Assistant custom sensor which counts down to public holidays and observances, by querying the Calendarific api
+The `Calendarific` component is a Home Assistant custom sensor which counts down to public holidays and observances, by querying the Calendarific api. The holidays also appear in the Home Assistant Calendar.
 
 #### State Returned
 * The number of days remaining to the next occurance.
 
-#### Attributes (both are provided by the Calendarific api):
-* date:  The next date of the holiday (formatted by date_format configuration option if set)
+#### Attributes:
+* date:  The next date of the holiday _(formatted by the date_format configuration option)_
 * description: The description of the holiday.
 
 ## Table of Contents
@@ -30,13 +30,13 @@ The `Calendarific` component is a Home Assistant custom sensor which counts down
 ## Installation
 ### HACS *(recommended)*
 1. Ensure that [HACS](https://hacs.xyz/) is installed
-1. [Click Here](https://my.home-assistant.io/redirect/hacs_repository/?owner=custom-components&repository=places) to directly open `Calendarific` in HACS **or**<br/>
+1. [Click Here](https://my.home-assistant.io/redirect/hacs_repository/?owner=Snuffy2&repository=Calendarific) to directly open `Calendarific` in HACS **or**<br/>
   a. Navigate to HACS<br/>
   b. Click `+ Explore & Download Repositories`<br/>
   c. Find the `Calendarific` integration <br/>
 1. Click `Download`
 1. Restart Home Assistant
-1. See [Configuration](#configuration) below
+1. See [Platform Configuration](#platform-configuration) below
 
 <details>
 <summary><h3>Manual</h3></summary>
@@ -48,17 +48,17 @@ You probably <u>do not</u> want to do this! Use the HACS method above unless you
 1. In the `custom_components` directory create a new folder called `calendarific`
 1. Download the `calendarific.zip` file from the [latest release](https://github.com/Snuffy2/calendarific/releases/latest).
 1. Unpack the release
-1. Place _all_ the files from the `custom_components/places/` directory in this repository into the new directory you created
+1. Place _all_ the files from the `custom_components/calendarific/` directory in this repository into the new directory you created
 1. Restart Home Assistant
-1. See [Configuration](#configuration) below
+1. See [Platform Configuration](#platform-configuration) below
 
 </details>
 
 ## Platform Configuration
 
-You will need an API key from Calendarific.com Go to the [sign up page](https://calendarific.com/signup) and open a new account.  A free tier account is limited to 1000 api calls per month.  This integration will make two calls per day (and two on home assistant start)
-
 ### The Calendarific platform MUST be configured in the configuration.yaml file.
+
+You will need an API key from Calendarific.com Go to the [sign up page](https://calendarific.com/signup) and open a new account.  A free tier account is limited to 1000 api calls per month.  This integration will make two calls per day (and two on home assistant start)
 
 ```yaml
 # Example configuration.yaml platform entry
@@ -67,7 +67,9 @@ calendarific:
   country: GB
   state: GB-WLS
 ```
-### Configuration Parameters
+
+### Platform Configuration Parameters
+
 |Attribute |Required|Description
 |:----------|----------|------------
 | `api_key` | Yes | your api key from calendarific.com
@@ -78,7 +80,17 @@ calendarific:
 
 In Configuration/Integrations click on the + button, select Calendarific and configure the options on the form (The available holidays will automatically appear on the list if the platform was configured correctly in the above step).
 
+1. [Click Here](https://my.home-assistant.io/redirect/config_flow_start/?domain=calendarific) to directly add a `Calendarific` sensor **or**<br/>
+    a. In Home Assistant, go to Settings -> [Integrations](https://my.home-assistant.io/redirect/integrations/)<br/>
+    b. Click `+ Add Integrations` and select `Calendarific`<br/>
+2. Add your configuration ([see Sensor Configuration Parameters](#sensor-configuration-parameters))
+4. Click `Submit`
+
+* Repeat as needed to create additional `Calendarific` sensors
+* Options can be changed for existing `Calendarific` sensors in Home Assistant Integrations by selecting `Configure` under the desired `Calendarific` sensor.
+
 ### Sensor Configuration Parameters
+
 |Attribute |Required|Description
 |:----------|----------|------------
 | `holiday` | Yes | Name of holiday provided by calendarific api
