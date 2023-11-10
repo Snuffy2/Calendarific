@@ -5,7 +5,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/Snuffy2/Calendarific?style=for-the-badge)](#places)
 [![License](https://img.shields.io/github/license/Snuffy2/Calendarific?color=blue&style=for-the-badge)](LICENSE)<br/>
 [![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge)](https://github.com/hacs/integration)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Snuffy2/Calendarific/hacs_validate.yml?branch=master&style=for-the-badge)](#calendarific)<br/>
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Snuffy2/Calendarific/hacs_validate.yml?branch=main&style=for-the-badge)](#calendarific)<br/>
 
 
 The 'Calendarific' component is a Home Assistant custom sensor which counts down to public holidays and observances, by querying the Calendarific api
