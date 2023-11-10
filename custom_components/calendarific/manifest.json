@@ -8,5 +8,5 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/Snuffy2/Calendarific/issues",  
   "requirements": [],
-  "version": "v0.0.0"
+  "version":"v0.15.2"
 }
