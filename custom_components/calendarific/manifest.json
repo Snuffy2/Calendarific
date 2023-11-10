@@ -1,7 +1,7 @@
 {
   "domain": "calendarific",
   "name": "Calendarific",
-  "codeowners": ["@pinkywafer","@Snuffy2"],
+  "codeowners": ["@Snuffy2","@pinkywafer"],
   "config_flow": true,
   "dependencies": ["calendar","sensor"],
   "documentation": "https://github.com/Snuffy2/Calendarific",
