@@ -23,7 +23,7 @@ The `Calendarific` component is a Home Assistant custom sensor which counts down
 * [Installation](#installation)
   + [Installation via HACS](#hacs-recommended)
   + [Manual Installation](#manual)
-* [Platfor Configuration](#platform-configuration)
+* [Platform Configuration](#platform-configuration)
   + [Platform Configuration Parameters](#platform-configuration-parameters)
 * [Sensor Configuration](#sensor-configuration)
   + [Sensor Configuration Parameters](#sensor-configuration-parameters)
