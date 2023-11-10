@@ -102,7 +102,7 @@ class EntitiesCalendarData:
         start_date = start_datetime.date()
         end_date = end_datetime.date()
         for ent in self.entities:
-            # _LOGGER.debug("Get Events: Entity Name: " + str(ent))
+            _LOGGER.debug("Get Events: Entity Name: " + str(ent))
             if (
                 ent
                 not in hass.data[DOMAIN][SENSOR_PLATFORM]
@@ -120,7 +120,7 @@ class EntitiesCalendarData:
                 event = CalendarEvent(
                     summary=entity.name,
                     start=entity._date,
-                    end=entity._date + timedelta(days=1),
+                    end=entity._date,
                     description=entity.extra_state_attributes["description"]
                     if "description" in entity.extra_state_attributes
                     else None,
@@ -133,14 +133,14 @@ class EntitiesCalendarData:
         """Get the latest data."""
         _LOGGER.debug("Update")
         for ent in self.entities:
-            # _LOGGER.debug("Update Entity Name: " + str(ent))
+            _LOGGER.debug("Update Entity Name: " + str(ent))
             entity = self._hass.data[DOMAIN][SENSOR_PLATFORM][ent]
             _LOGGER.debug("Update Entity: " + str(entity))
             if entity and entity.name and entity._date:
                 self.event = CalendarEvent(
                     summary=entity.name,
                     start=entity._date,
-                    end=entity._date + timedelta(days=1),
+                    end=entity._date,
                     description=entity.extra_state_attributes["description"]
                     if "description" in entity.extra_state_attributes
                     else None,
