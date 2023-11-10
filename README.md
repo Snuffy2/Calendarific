@@ -1,11 +1,12 @@
 # Calendarific
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/Snuffy2/Calendarific)](https://github.com/Snuffy2/Calendarific/releases)
-![GitHub Release Date](https://img.shields.io/github/release-date/Snuffy2/Calendarific)
-[![GitHub](https://img.shields.io/github/license/Snuffy2/Calendarific)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/release/Snuffy2/Calendarific.svg?style=for-the-badge)](https://github.com/Snuffy2/Calendarific/releases)
+[![GitHub Release Date](https://img.shields.io/github/release-date/Snuffy2/Calendarific?label=Last%20Release&style=for-the-badge)](#places)
+[![GitHub Commit Activity](https://img.shields.io/github/commit-activity/y/Snuffy2/Calendarific.svg?style=for-the-badge)](https://github.com/Snuffy2/Calendarific/commits/master)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Snuffy2/Calendarific?style=for-the-badge)](#places)
+[![License](https://img.shields.io/github/license/Snuffy2/Calendarific?color=blue&style=for-the-badge)](LICENSE)<br/>
+[![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge)](https://github.com/hacs/integration)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Snuffy2/Calendarific/hacs_validate.yml?branch=master&style=for-the-badge)](#calendarific)<br/>
 
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-Yes-brightgreen.svg)](https://github.com/Snuffy2/Calendarific/graphs/commit-activity)
-[![GitHub issues](https://img.shields.io/github/issues/Snuffy2/Calendarific)](https://github.com/Snuffy2/Calendarific/issues)
 
 The 'Calendarific' component is a Home Assistant custom sensor which counts down to public holidays and observances, by querying the Calendarific api
 
