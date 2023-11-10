@@ -31,10 +31,16 @@ The `Calendarific` component is a Home Assistant custom sensor which counts down
 ## Installation
 ### HACS *(recommended)*
 1. Ensure that [HACS](https://hacs.xyz/) is installed
+1. Navigate to HACS
+2. Click the <img width="25" alt="2023-11-10_15-31-28" src="https://github.com/Snuffy2/Calendarific/assets/6526076/80fb7906-0b60-4002-b119-614c5ac03024"> in the top right of the screen and select <img width="21" alt="2023-11-10_15-28-402" src="https://github.com/Snuffy2/Calendarific/assets/6526076/a79c3a37-91fa-4039-9f2f-bb86d169bb00"> Custom Repositories<br/>
+    a. Repository: `https://github.com/Snuffy2/Calendarific`<br/>
+    b. Category: `Integration`<br/>
+    c. Click `Add` then close the popup<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<img width="402" alt="2023-11-10_15-12-26" src="https://github.com/Snuffy2/Calendarific/assets/6526076/97f76676-ba63-4198-a2ea-9ed785c49575"><br/>
 1. [Click Here](https://my.home-assistant.io/redirect/hacs_repository/?owner=Snuffy2&repository=Calendarific) to directly open `Calendarific` in HACS **or**<br/>
   a. Navigate to HACS<br/>
-  b. Click `+ Explore & Download Repositories`<br/>
-  c. Find the `Calendarific` integration <br/>
+  b. Search for `Calendarific`<br/>
+  c. Find the `Calendarific` integration with the description of: "Calendarific holiday sensor for Home Assistant (updated by Snuffy2)"<br/>
 1. Click `Download`
 1. Restart Home Assistant
 1. See [Platform Configuration](#platform-configuration) below
