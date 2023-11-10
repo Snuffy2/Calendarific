@@ -2,7 +2,7 @@
 # Base component constants
 DOMAIN = "calendarific"
 VERSION = "1.0.2"
-ISSUE_URL = "https://github.com/pinkywafer/Calendarific/issues"
+ISSUE_URL = "https://github.com/Snuffy2/Calendarific/issues"
 ATTRIBUTION = "Data provided by calendarific.com"
 
 ATTR_DATE = "date"
@@ -21,11 +21,11 @@ CONF_UNIT_OF_MEASUREMENT = "unit_of_measurement"
 DEFAULT_ICON_NORMAL = "mdi:calendar-blank"
 DEFAULT_ICON_TODAY = "mdi:calendar-star"
 DEFAULT_ICON_SOON = "mdi:calendar"
-DEFAULT_DATE_FORMAT = "%Y-%m-%d"
+DEFAULT_DATE_FORMAT = "%x"
 DEFAULT_SOON = 1
 DEFAULT_UNIT_OF_MEASUREMENT = "Days"
 
-#Calendar
+# Calendar
 CALENDAR_NAME = "Calendarific"
 SENSOR_PLATFORM = "sensor"
 CALENDAR_PLATFORM = "calendar"
