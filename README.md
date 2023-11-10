@@ -78,7 +78,7 @@ calendarific:
 ### Platform Configuration Parameters
 
 |Attribute |Required|Description
-|:----------|----------|------------
+| -- | -- | --
 | `api_key` | Yes | your api key from calendarific.com
 | `country` | Yes | your country code [here is a list of supported countries](https://calendarific.com/supported-countries)
 | `state` | No | your state code (ISO 3166-2 subdivision code) [[USA](https://en.wikipedia.org/wiki/ISO_3166-2:US)] [[UK](https://en.wikipedia.org/wiki/ISO_3166-2:GB)] _note the state code is for the country in the uk (counties not supported) or the state in the us._   If omitted, only national holidays will be displayed
@@ -98,13 +98,13 @@ In Configuration/Integrations click on the + button, select Calendarific and con
 
 ### Sensor Configuration Parameters
 
-|Attribute |Required|Description
-|:----------|----------|------------
-| `holiday` | Yes | Name of holiday provided by calendarific api
-| `name` | No | Friendly name **Default**: Holiday name
-| `icon_normal` | No | Default icon **Default**:  `mdi:calendar-blank`
-| `icon_today` | No | Icon if the holiday is today **Default**: `mdi:calendar-star`
-| `days_as_soon` | No | Days in advance to display the icon defined in `icon_soon` **Default**: 1
-| `icon_soon` | No | Icon if the holiday is 'soon' **Default**: `mdi:calendar`
-| `date_format` | No | Format the returned date **Default**: `%x` (Locale’s appropriate date representation) _for reference, see [http://strftime.org/](http://strftime.org/)_
+|Attribute |Required|Default|Description
+| -- | -- | -- | --
+| `holiday` | Yes || Name of the holiday provided by calendarific api
+| `name` | No | \<Holiday Name\> | Friendly name
+| `icon_normal` | No | `mdi:calendar-blank` | Default icon
+| `icon_today` | No | `mdi:calendar-star` | Icon if the holiday is today
+| `days_as_soon` | No | 1 | Days in advance to display the icon defined in `icon_soon`
+| `icon_soon` | No | `mdi:calendar` | Icon if the holiday is 'soon'
+| `date_format` | No | `%x` _(Locale’s appropriate date representation)_ | Format the returned date. _for reference, see [http://strftime.org/](http://strftime.org/)_
 
