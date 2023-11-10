@@ -60,7 +60,6 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         reader = hass.data[DOMAIN]["apiReader"]
         async_add_entities([calendarific(config, reader)], True)
 
-
 async def async_setup_entry(hass, entry, async_add_entities):
     """Setup sensor platform."""
     if DOMAIN in hass.data:
@@ -157,8 +156,10 @@ class calendarific(Entity):
                     {"name": CALENDAR_NAME},
                 )
             )
+
         #else:
             #_LOGGER.info("Calendarific calendar already exists")
+
         self.hass.data[DOMAIN][CALENDAR_PLATFORM].add_entity(self.entity_id)
 
     async def async_will_remove_from_hass(self):
@@ -167,7 +168,7 @@ class calendarific(Entity):
         _LOGGER.debug("Removing: %s" % (self._name))
         del self.hass.data[DOMAIN][SENSOR_PLATFORM][self.entity_id]
         self.hass.data[DOMAIN][CALENDAR_PLATFORM].remove_entity(self.entity_id)
-        #_LOGGER.debug("Remaining Calendar Entries: %s" % (self.hass.data[DOMAIN][CALENDAR_PLATFORM]))
+        _LOGGER.debug("Remaining Calendar Entries: %s" % (self.hass.data[DOMAIN][CALENDAR_PLATFORM]))
 
     async def async_update(self):
         await self.hass.async_add_executor_job(self._reader.update)
