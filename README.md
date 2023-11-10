@@ -1,15 +1,11 @@
 # Calendarific
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/pinkywafer/Calendarific)](https://github.com/pinkywafer/Calendarific/releases)
-![GitHub Release Date](https://img.shields.io/github/release-date/pinkywafer/Calendarific)
-[![GitHub](https://img.shields.io/github/license/pinkywafer/Calendarific)](LICENSE)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/Snuffy2/Calendarific)](https://github.com/Snuffy2/Calendarific/releases)
+![GitHub Release Date](https://img.shields.io/github/release-date/Snuffy2/Calendarific)
+[![GitHub](https://img.shields.io/github/license/Snuffy2/Calendarific)](LICENSE)
 
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-Yes-brightgreen.svg)](https://github.com/pinkywafer/Calendarific/graphs/commit-activity)
-[![GitHub issues](https://img.shields.io/github/issues/pinkywafer/Calendarific)](https://github.com/pinkywafer/Calendarific/issues)
-
-[![Buy me a coffee](https://img.shields.io/static/v1.svg?label=Buy%20me%20a%20coffee&logo=buy%20me%20a%20coffee&logoColor=white&labelColor=ff69b4&message=donate&color=Black)](https://www.buymeacoffee.com/V3q9id4)
-
-[![Support Pinkywafer on Patreon][patreon-shield]][patreon]
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-Yes-brightgreen.svg)](https://github.com/Snuffy2/Calendarific/graphs/commit-activity)
+[![GitHub issues](https://img.shields.io/github/issues/Snuffy2/Calendarific)](https://github.com/Snuffy2/Calendarific/issues)
 
 The 'Calendarific' component is a Home Assistant custom sensor which counts down to public holidays and observances, by querying the Calendarific api
 
@@ -35,7 +31,7 @@ Attributes (both are provided by the Calendarific api):
 ### MANUAL INSTALLATION
 
 1. Download the `calendarific.zip` file from the 
-   [latest release](https://github.com/pinkywafer/calendarific/releases/latest).
+   [latest release](https://github.com/Snuffy2/calendarific/releases/latest).
 2. Unpack the release and copy the `custom_components/calendarific` directory
    into the `custom_components` directory of your Home Assistant
    installation.
@@ -101,6 +97,3 @@ sensor:
 | `days_as_soon` | Yes | Days in advance to display the icon defined in `icon_soon` **Default**: 1
 | `icon_soon` | Yes | Icon if the holiday is 'soon' **Default**: `mdi:calendar`
 | `date_format` | Yes | formats the returned date **Default**: '%Y-%m-%d' _for reference, see [http://strftime.org/](http://strftime.org/)_
-
-[patreon-shield]: https://c5.patreon.com/external/logo/become_a_patron_button.png
-[patreon]: https://www.patreon.com/pinkywafer
