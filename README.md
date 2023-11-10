@@ -7,6 +7,7 @@
 [![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge)](https://github.com/hacs/integration)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Snuffy2/Calendarific/hacs_validate.yml?branch=main&style=for-the-badge)](#calendarific)<br/>
 
+#### Building on the excellent work by @pinkywafer
 
 The `Calendarific` component is a Home Assistant custom sensor which counts down to public holidays and observances, by querying the Calendarific api. The holidays also appear in the Home Assistant Calendar.
 
