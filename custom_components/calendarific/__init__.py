@@ -7,7 +7,8 @@ import homeassistant.helpers.config_validation as cv
 import requests
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.typing import HomeAssistantType
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.typing import ConfigType
 
 from .const import (
     ATTR_DATE,
@@ -22,6 +23,8 @@ from .const import (
     SENSOR_PLATFORM,
 )
 
+_LOGGER = logging.getLogger(__name__)
+
 CONFIG_SCHEMA = vol.Schema(
     {
         DOMAIN: vol.Schema(
@@ -35,12 +38,10 @@ CONFIG_SCHEMA = vol.Schema(
     extra=vol.ALLOW_EXTRA,
 )
 
-_LOGGER = logging.getLogger(__name__)
-
 holiday_dict = {}
 
 
-def setup(hass, config):
+async def async_setup(hass: HomeAssistant, config: ConfigType):
     """Set up platform using YAML."""
     if DOMAIN in config:
         api_key = config[DOMAIN].get(CONF_API_KEY)
@@ -52,14 +53,14 @@ def setup(hass, config):
     return True
 
 
-async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry):
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     hass.async_create_task(
         hass.config_entries.async_forward_entry_setup(entry, SENSOR_PLATFORM)
     )
     return True
 
 
-async def async_unload_entry(hass, entry):
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Unload a config entry."""
     return await hass.config_entries.async_forward_entry_unload(entry, SENSOR_PLATFORM)
 
@@ -141,7 +142,7 @@ class CalendarificApiReader:
                 self._error_logged = True
             return
         self._holidays = response["response"]["holidays"]
-        _LOGGER.debug(f"API Holidays: {self._holidays}")
+        # _LOGGER.debug(f"API Holidays: {self._holidays}")
         params["year"] = year + 1
         response = calapi.holidays(params)
         if "error" in response:
@@ -151,7 +152,7 @@ class CalendarificApiReader:
             return
         self._error_logged = False
         self._next_holidays = response["response"]["holidays"]
-        _LOGGER.debug(f"API Next Holidays: {self._next_holidays}")
+        # _LOGGER.debug(f"API Next Holidays: {self._next_holidays}")
         global holiday_dict
         holiday_dict = {}
         for holiday in self._next_holidays:
@@ -204,7 +205,7 @@ class CalendarificApiReader:
                 )
 
         holiday_dict = dict(sorted(holiday_dict.items()))
-        _LOGGER.debug(f"Holiday Dict: {holiday_dict}")
+        # _LOGGER.debug(f"Holiday Dict: {holiday_dict}")
 
         return True
 
