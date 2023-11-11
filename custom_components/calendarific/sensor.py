@@ -116,25 +116,25 @@ class calendarific(SensorEntity):
     async def async_will_remove_from_hass(self):
         """When sensor is removed from hassio and there are no other sensors in the Calendarific calendar, remove it."""
         await super().async_will_remove_from_hass()
-        _LOGGER.debug(f"Removing: {self._attr_name}")
+        _LOGGER.debug(f"Removing Sensor: {self._attr_name}")
         del self.hass.data[DOMAIN][SENSOR_PLATFORM][self.entity_id]
         self.hass.data[DOMAIN][CALENDAR_PLATFORM].remove_entity(self.entity_id)
         # _LOGGER.debug(f"Remaining Calendar Entries: {self.hass.data[DOMAIN][CALENDAR_PLATFORM]}")
 
     async def async_update(self):
         await self.hass.async_add_executor_job(self._reader.update)
-        _LOGGER.debug(f"Update: {self._attr_name}")
+        _LOGGER.debug(f"[Sensor Update] {self._attr_name}")
         self._description = self._reader.get_description(self._holiday)
         self._date = self._reader.get_date(self._holiday)
-        # _LOGGER.debug(f"[Update] Date: {self._date}")
-        # _LOGGER.debug(f"[Update] Date Type: {type(self._date)}")
+        # _LOGGER.debug(f"[Sensor Update] Date: {self._date}")
+        # _LOGGER.debug(f"[Sensor Update] Date Type: {type(self._date)}")
         if not self._date or self._date == "-":
             self._attr_native_value = None
             self._attr_date = self._date
             return
         self._attr_date = self._date.strftime(self._date_format)
-        # _LOGGER.debug(f"[Update] Date Format: {self._date_format}")
-        # _LOGGER.debug(f"[Update] Attr Date: {self._attr_date}")
+        # _LOGGER.debug(f"[Sensor Update] Date Format: {self._date_format}")
+        # _LOGGER.debug(f"[Sensor Update] Attr Date: {self._attr_date}")
         today = date.today()
         daysRemaining = 0
         if today < self._date:
