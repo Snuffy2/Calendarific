@@ -1,7 +1,7 @@
 """Calendarific Platform"""
 import json
 import logging
-from datetime import date
+from datetime import date, datetime
 
 import homeassistant.helpers.config_validation as cv
 import requests
@@ -13,6 +13,7 @@ from .const import (
     ATTR_DATE,
     ATTR_DATETIME,
     ATTR_DESCRIPTION,
+    ATTR_ISO,
     ATTR_NAME,
     CONF_API_KEY,
     CONF_COUNTRY,
@@ -36,7 +37,7 @@ CONFIG_SCHEMA = vol.Schema(
 
 _LOGGER = logging.getLogger(__name__)
 
-holiday_list = []
+holiday_dict = {}
 
 
 def setup(hass, config):
@@ -86,7 +87,7 @@ class CalendarificApiReader:
         )
         if holiday_datetime:
             holiday_datetime = holiday_datetime[ATTR_DATE][ATTR_DATETIME]
-            _LOGGER.debug(f"[get_date] first holiday_datetime: {holiday_datetime}")
+            # _LOGGER.debug(f"[get_date] first holiday_datetime: {holiday_datetime}")
         if (
             not holiday_datetime
             or date(
@@ -103,8 +104,8 @@ class CalendarificApiReader:
                 _LOGGER.warning(f"{holiday_name}: Future date not found.")
                 return None
             holiday_datetime = holiday_datetime[ATTR_DATE][ATTR_DATETIME]
-            _LOGGER.debug(f"[get_date] next holiday_datetime: {holiday_datetime}")
-        _LOGGER.debug(f"[get_date] final holiday_datetime: {holiday_datetime}")
+            # _LOGGER.debug(f"[get_date] next holiday_datetime: {holiday_datetime}")
+        _LOGGER.debug(f"[get_date] holiday_datetime: {holiday_datetime}")
         return date(
             holiday_datetime["year"],
             holiday_datetime["month"],
@@ -125,9 +126,10 @@ class CalendarificApiReader:
         return descr[ATTR_DESCRIPTION]
 
     def update(self):
-        if self._lastupdated == date.today():
+        TODAY = date.today()
+        if self._lastupdated == TODAY:
             return
-        self._lastupdated = date.today()
+        self._lastupdated = TODAY
         year = date.today().year
         params = {"country": self._country, "year": year, "location": self._state}
         calapi = calendarificAPI(self._api_key)
@@ -139,7 +141,7 @@ class CalendarificApiReader:
                 self._error_logged = True
             return
         self._holidays = response["response"]["holidays"]
-        # _LOGGER.debug(f"API Holidays: {self._holidays}")
+        _LOGGER.debug(f"API Holidays: {self._holidays}")
         params["year"] = year + 1
         response = calapi.holidays(params)
         if "error" in response:
@@ -149,11 +151,60 @@ class CalendarificApiReader:
             return
         self._error_logged = False
         self._next_holidays = response["response"]["holidays"]
-        # _LOGGER.debug(f"API Next Holidays: {self._next_holidays}")
-        global holiday_list
-        holiday_list = []
+        _LOGGER.debug(f"API Next Holidays: {self._next_holidays}")
+        global holiday_dict
+        holiday_dict = {}
+        for holiday in self._next_holidays:
+            good_date = False
+            isodate = None
+            try:
+                isodate = date.fromisoformat(holiday[ATTR_DATE][ATTR_ISO])
+            except ValueError:
+                try:
+                    isodate = datetime.fromisoformat(
+                        holiday[ATTR_DATE][ATTR_ISO]
+                    ).date()
+                except ValueError:
+                    pass
+                else:
+                    good_date = True
+            else:
+                good_date = True
+            if good_date and isodate >= TODAY:
+                holiday_dict.update(
+                    {
+                        holiday[
+                            ATTR_NAME
+                        ]: f"{holiday[ATTR_NAME]} [{holiday[ATTR_DATE]['iso']}]"
+                    }
+                )
         for holiday in self._holidays:
-            holiday_list.append(holiday[ATTR_NAME])
+            good_date = False
+            isodate = None
+            try:
+                isodate = date.fromisoformat(holiday[ATTR_DATE][ATTR_ISO])
+            except ValueError:
+                try:
+                    isodate = datetime.fromisoformat(
+                        holiday[ATTR_DATE][ATTR_ISO]
+                    ).date()
+                except ValueError:
+                    pass
+                else:
+                    good_date = True
+            else:
+                good_date = True
+            if good_date and isodate >= TODAY:
+                holiday_dict.update(
+                    {
+                        holiday[
+                            ATTR_NAME
+                        ]: f"{holiday[ATTR_NAME]} [{holiday[ATTR_DATE]['iso']}]"
+                    }
+                )
+
+        holiday_dict = dict(sorted(holiday_dict.items()))
+        _LOGGER.debug(f"Holiday Dict: {holiday_dict}")
 
         return True
 
