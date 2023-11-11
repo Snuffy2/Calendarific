@@ -6,7 +6,7 @@ from homeassistant.const import Platform
 
 # Base component constants
 DOMAIN = "calendarific"
-VERSION = "v1.0.2"
+VERSION = "v0.16.0"
 ISSUE_URL = "https://github.com/Snuffy2/Calendarific/issues"
 
 ATTRIBUTION = "Data provided by calendarific.com"
