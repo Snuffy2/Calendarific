@@ -1,7 +1,7 @@
 """Calendarific Platform"""
 import json
 import logging
-from datetime import date, datetime
+from datetime import date
 
 import homeassistant.helpers.config_validation as cv
 import requests
@@ -9,11 +9,17 @@ import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.typing import HomeAssistantType
 
-from .const import DOMAIN
-
-CONF_API_KEY = "api_key"
-CONF_COUNTRY = "country"
-CONF_STATE = "state"
+from .const import (
+    ATTR_DATE,
+    ATTR_DATETIME,
+    ATTR_DESCRIPTION,
+    ATTR_NAME,
+    CONF_API_KEY,
+    CONF_COUNTRY,
+    CONF_STATE,
+    DOMAIN,
+    SENSOR_PLATFORM,
+)
 
 CONFIG_SCHEMA = vol.Schema(
     {
@@ -47,14 +53,14 @@ def setup(hass, config):
 
 async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry):
     hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(entry, "sensor")
+        hass.config_entries.async_forward_entry_setup(entry, SENSOR_PLATFORM)
     )
     return True
 
 
 async def async_unload_entry(hass, entry):
     """Unload a config entry."""
-    return await hass.config_entries.async_forward_entry_unload(entry, "sensor")
+    return await hass.config_entries.async_forward_entry_unload(entry, SENSOR_PLATFORM)
 
 
 class CalendarificApiReader:
@@ -65,7 +71,7 @@ class CalendarificApiReader:
         self._lastupdated = None
         _LOGGER.info("apiReader loaded")
         self._holidays = []
-        self.next_holidays = []
+        self._next_holidays = []
         self._error_logged = False
         self.update()
 
@@ -73,56 +79,68 @@ class CalendarificApiReader:
         return "new"
 
     def get_date(self, holiday_name):
-        try:
-            today = date.today()
-            holiday_datetime = next(
-                i for i in self._holidays if i["name"] == holiday_name
-            )["date"]["datetime"]
-            testdate = date(
+        _LOGGER.debug(f"[get_date] holiday_name: {holiday_name}")
+        today = date.today()
+        holiday_datetime = next(
+            (i for i in self._holidays if i[ATTR_NAME] == holiday_name), None
+        )
+        if holiday_datetime:
+            holiday_datetime = holiday_datetime[ATTR_DATE][ATTR_DATETIME]
+            _LOGGER.debug(f"[get_date] first holiday_datetime: {holiday_datetime}")
+        if (
+            not holiday_datetime
+            or date(
                 holiday_datetime["year"],
                 holiday_datetime["month"],
                 holiday_datetime["day"],
             )
-            if testdate < today:
-                holiday_datetime = next(
-                    i for i in self._next_holidays if i["name"] == holiday_name
-                )["date"]["datetime"]
-                testdate = date(
-                    holiday_datetime["year"],
-                    holiday_datetime["month"],
-                    holiday_datetime["day"],
-                )
-            return testdate
-        except Exception as e:
-            _LOGGER.warning("get_date error: " + str(e))
-            return "-"
+            < today
+        ):
+            holiday_datetime = next(
+                (i for i in self._next_holidays if i[ATTR_NAME] == holiday_name), None
+            )
+            if not holiday_datetime:
+                _LOGGER.warning(f"{holiday_name}: Future date not found.")
+                return None
+            holiday_datetime = holiday_datetime[ATTR_DATE][ATTR_DATETIME]
+            _LOGGER.debug(f"[get_date] next holiday_datetime: {holiday_datetime}")
+        _LOGGER.debug(f"[get_date] final holiday_datetime: {holiday_datetime}")
+        return date(
+            holiday_datetime["year"],
+            holiday_datetime["month"],
+            holiday_datetime["day"],
+        )
 
     def get_description(self, holiday_name):
-        try:
-            return next(i for i in self._holidays if i["name"] == holiday_name)[
-                "description"
-            ]
-        except Exception as e:
-            _LOGGER.warning("get_description error: " + str(e))
-            return "NOT FOUND"
+        _LOGGER.debug(f"[get_description] holiday_name: {holiday_name}")
+        descr = next((i for i in self._holidays if i[ATTR_NAME] == holiday_name), None)
+        if not descr:
+            descr = next(
+                (i for i in self._next_holidays if i[ATTR_NAME] == holiday_name), None
+            )
+            if not descr:
+                _LOGGER.warning(f"{holiday_name}: Description not found.")
+                return None
+        _LOGGER.debug(f"[get_description] Description: {descr[ATTR_DESCRIPTION]}")
+        return descr[ATTR_DESCRIPTION]
 
     def update(self):
-        if self._lastupdated == datetime.now().date():
+        if self._lastupdated == date.today():
             return
-        self._lastupdated = datetime.now().date()
+        self._lastupdated = date.today()
         year = date.today().year
         params = {"country": self._country, "year": year, "location": self._state}
         calapi = calendarificAPI(self._api_key)
         response = calapi.holidays(params)
         _LOGGER.info("Updating from Calendarific api")
-        if 'error' in response:
+        if "error" in response:
             if not self._error_logged:
                 _LOGGER.error(response["meta"]["error_detail"])
                 self._error_logged = True
             return
-        self._holidays = response['response']['holidays']
-        #_LOGGER.debug("API Holidays: %s" % (self._holidays))
-        params['year'] = year + 1
+        self._holidays = response["response"]["holidays"]
+        # _LOGGER.debug(f"API Holidays: {self._holidays}")
+        params["year"] = year + 1
         response = calapi.holidays(params)
         if "error" in response:
             if not self._error_logged:
@@ -130,12 +148,12 @@ class CalendarificApiReader:
                 self._error_logged = True
             return
         self._error_logged = False
-        self._next_holidays = response['response']['holidays']
-        #_LOGGER.debug("API Next Holidays: %s" % (self._next_holidays))
+        self._next_holidays = response["response"]["holidays"]
+        # _LOGGER.debug(f"API Next Holidays: {self._next_holidays}")
         global holiday_list
         holiday_list = []
         for holiday in self._holidays:
-            holiday_list.append(holiday["name"])
+            holiday_list.append(holiday[ATTR_NAME])
 
         return True
 

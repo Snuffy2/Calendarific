@@ -1,13 +1,20 @@
+from homeassistant.const import Platform
+
 """ Constants """
+
 # Base component constants
 DOMAIN = "calendarific"
-VERSION = "1.0.2"
+VERSION = "v1.0.2"
 ISSUE_URL = "https://github.com/Snuffy2/Calendarific/issues"
-ATTRIBUTION = "Data provided by calendarific.com"
 
-ATTR_DATE = "date"
+ATTRIBUTION = "Data provided by calendarific.com"
+SENSOR_PLATFORM = Platform.SENSOR
+CALENDAR_PLATFORM = Platform.CALENDAR
 
 # Configuration
+CONF_API_KEY = "api_key"
+CONF_COUNTRY = "country"
+CONF_STATE = "state"
 CONF_ENABLED = "enabled"
 CONF_ICON_NORMAL = "icon_normal"
 CONF_ICON_TODAY = "icon_today"
@@ -27,5 +34,9 @@ DEFAULT_UNIT_OF_MEASUREMENT = "Days"
 
 # Calendar
 CALENDAR_NAME = "Calendarific"
-SENSOR_PLATFORM = "sensor"
-CALENDAR_PLATFORM = "calendar"
+
+# Attributes
+ATTR_DESCRIPTION = "description"
+ATTR_DATE = "date"
+ATTR_DATETIME = "datetime"
+ATTR_NAME = "name"

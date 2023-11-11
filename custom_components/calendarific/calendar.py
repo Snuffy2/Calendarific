@@ -11,7 +11,13 @@ from homeassistant.components.calendar import CalendarEntity, CalendarEvent
 from homeassistant.core import HomeAssistant
 from homeassistant.util import Throttle
 
-from .const import CALENDAR_NAME, CALENDAR_PLATFORM, DOMAIN, SENSOR_PLATFORM
+from .const import (
+    ATTR_DESCRIPTION,
+    CALENDAR_NAME,
+    CALENDAR_PLATFORM,
+    DOMAIN,
+    SENSOR_PLATFORM,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -95,13 +101,13 @@ class EntitiesCalendarData:
     ) -> list[CalendarEvent]:
         """Get all events in a specific time frame."""
         events: list[CalendarEvent] = []
-        _LOGGER.debug("Get Events")
+        _LOGGER.debug("[Get Events]")
         if SENSOR_PLATFORM not in hass.data[DOMAIN]:
             return events
         start_date = start_datetime.date()
         end_date = end_datetime.date()
         for ent in self.entities:
-            _LOGGER.debug("Get Events: Entity Name: " + str(ent))
+            _LOGGER.debug(f"[Get Events] Entity Name: {ent}")
             if (
                 ent
                 not in hass.data[DOMAIN][SENSOR_PLATFORM]
@@ -109,7 +115,7 @@ class EntitiesCalendarData:
             ):
                 continue
             entity = self._hass.data[DOMAIN][SENSOR_PLATFORM][ent]
-            _LOGGER.debug("Get Events: Entity: " + str(entity))
+            _LOGGER.debug(f"[Get Events] Entity: {entity}")
             if (
                 entity
                 and entity.name
@@ -120,8 +126,8 @@ class EntitiesCalendarData:
                     summary=entity.name,
                     start=entity._date,
                     end=entity._date,
-                    description=entity.extra_state_attributes["description"]
-                    if "description" in entity.extra_state_attributes
+                    description=entity.extra_state_attributes[ATTR_DESCRIPTION]
+                    if ATTR_DESCRIPTION in entity.extra_state_attributes
                     else None,
                 )
                 events.append(event)
@@ -132,15 +138,17 @@ class EntitiesCalendarData:
         """Get the latest data."""
         _LOGGER.debug("Update")
         for ent in self.entities:
-            _LOGGER.debug("Update Entity Name: " + str(ent))
+            _LOGGER.debug(f"[Update] Entity ID: {ent}")
             entity = self._hass.data[DOMAIN][SENSOR_PLATFORM][ent]
-            _LOGGER.debug("Update Entity: " + str(entity))
-            if entity and entity.name and entity._date:
+            _LOGGER.debug(f"[Update] Entity: {entity}")
+            _LOGGER.debug(f"[Update] Entity Name: {entity.name}")
+            _LOGGER.debug(f"[Update] Entity Date: {entity._date}")
+            if entity and entity.name and entity._date and entity._date != "-":
                 self.event = CalendarEvent(
                     summary=entity.name,
                     start=entity._date,
                     end=entity._date,
-                    description=entity.extra_state_attributes["description"]
-                    if "description" in entity.extra_state_attributes
+                    description=entity.extra_state_attributes[ATTR_DESCRIPTION]
+                    if ATTR_DESCRIPTION in entity.extra_state_attributes
                     else None,
                 )
