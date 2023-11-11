@@ -136,13 +136,11 @@ class EntitiesCalendarData:
     @Throttle(MIN_TIME_BETWEEN_UPDATES)
     async def async_update(self) -> None:
         """Get the latest data."""
-        _LOGGER.debug("Update")
         for ent in self.entities:
-            _LOGGER.debug(f"[Update] Entity ID: {ent}")
+            _LOGGER.debug(f"[Calendar Update] Entity ID: {ent}")
             entity = self._hass.data[DOMAIN][SENSOR_PLATFORM][ent]
-            _LOGGER.debug(f"[Update] Entity: {entity}")
-            _LOGGER.debug(f"[Update] Entity Name: {entity.name}")
-            _LOGGER.debug(f"[Update] Entity Date: {entity._date}")
+            _LOGGER.debug(f"[Calendar Update] Holiday Name: {entity.name}")
+            _LOGGER.debug(f"[Calendar Update] Holiday Date: {entity._date}")
             if entity and entity.name and entity._date and entity._date != "-":
                 self.event = CalendarEvent(
                     summary=entity.name,
