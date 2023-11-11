@@ -28,7 +28,6 @@ async def async_setup_platform(
     hass, config, async_add_entities, discovery_info=None
 ) -> None:
     """Add calendar entities to HA, of there are calendar instances."""
-    # pylint: disable=unused-argument
     # Only single instance allowed
     if not CalendarificCalendar.instances:
         async_add_entities([CalendarificCalendar()], True)

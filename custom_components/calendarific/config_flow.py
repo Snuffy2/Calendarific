@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import logging
 import uuid
+from datetime import date
 
 import voluptuous as vol
 from homeassistant import config_entries
@@ -29,27 +30,29 @@ from .const import (
     DOMAIN,
 )
 
+_LOGGER = logging.getLogger(__name__)
+TODAY = date.today()
 COMPONENT_CONFIG_URL = (
-    "https://github.com/pinkywafer/Calendarific#sensor-configuration-parameters"
+    "https://github.com/snuffy2/Calendarific#sensor-configuration-parameters"
 )
 SOON_MIN = 0
 SOON_MAX = 364
 DATE_FORMAT_OPTIONS = [
     selector.SelectOptionDict(
-        value=DEFAULT_DATE_FORMAT, label="2000-12-30 (" + DEFAULT_DATE_FORMAT + ")"
+        value="%Y-%m-%d",
+        label=f"{TODAY.strftime('%Y-%m-%d')} (%Y-%m-%d) WARNING: May show a day off",
     ),
     selector.SelectOptionDict(
-        value="%x", label="Locale’s appropriate date [12/30/00] (%x)"
+        value="%x", label=f"{TODAY.strftime('%x')} (%x) Locale’s appropriate date"
     ),
     selector.SelectOptionDict(
-        value="%B %-d, %Y", label="December 30, 2000 (%B %-d, %Y)"
+        value="%B %-d, %Y", label=f"{TODAY.strftime('%B %-d, %Y')} (%B %-d, %Y)"
     ),
     selector.SelectOptionDict(
-        value="%A, %B %-d, %Y", label="Saturday, December 30, 2000 (%A, %B %-d, %Y)"
+        value="%A, %B %-d, %Y",
+        label=f"{TODAY.strftime('%A, %B %-d, %Y')} (%A, %B %-d, %Y)",
     ),
 ]
-
-_LOGGER = logging.getLogger(__name__)
 
 
 @callback
@@ -58,9 +61,6 @@ def calendarific_entries(hass: HomeAssistant):
 
 
 class CalendarificConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    "handle config flow"
-    # CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
-
     def __init__(self) -> None:
         self._errors = {}
         # self._data = {}
@@ -81,7 +81,14 @@ class CalendarificConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
         DATA_SCHEMA = vol.Schema(
             {
-                vol.Required(CONF_HOLIDAY): vol.In(holiday_list),
+                vol.Required(CONF_HOLIDAY): selector.SelectSelector(
+                    selector.SelectSelectorConfig(
+                        options=holiday_list,
+                        multiple=False,
+                        custom_value=False,
+                        mode=selector.SelectSelectorMode.DROPDOWN,
+                    )
+                ),
                 vol.Optional(
                     CONF_NAME,
                 ): str,
@@ -97,7 +104,10 @@ class CalendarificConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     CONF_ICON_TODAY,
                     default=DEFAULT_ICON_TODAY,
                 ): selector.IconSelector(selector.IconSelectorConfig()),
-                vol.Required(CONF_SOON, default=DEFAULT_SOON,): selector.NumberSelector(
+                vol.Required(
+                    CONF_SOON,
+                    default=DEFAULT_SOON,
+                ): selector.NumberSelector(
                     selector.NumberSelectorConfig(
                         min=SOON_MIN,
                         max=SOON_MAX,
