@@ -12,7 +12,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import selector
 
-from . import holiday_dict
+# from . import holiday_dict
 from .const import (
     CONF_DATE_FORMAT,
     CONF_HOLIDAY,

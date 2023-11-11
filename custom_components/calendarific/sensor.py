@@ -5,10 +5,10 @@ from datetime import date
 from homeassistant.components.sensor import SensorEntity, SensorStateClass
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_ATTRIBUTION, CONF_NAME, UnitOfTime
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .calendar import EntitiesCalendarData
 from .const import (
@@ -18,6 +18,7 @@ from .const import (
     ATTRIBUTION,
     CALENDAR_NAME,
     CALENDAR_PLATFORM,
+    CONF_COORDINATOR,
     CONF_DATE_FORMAT,
     CONF_HOLIDAY,
     CONF_ICON_NORMAL,
@@ -27,46 +28,44 @@ from .const import (
     DOMAIN,
     SENSOR_PLATFORM,
 )
+from .coordinator import CalendarificCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_platform(
-    hass: HomeAssistant,
-    config: ConfigType,
-    async_add_entities: AddEntitiesCallback,
-    discovery_info: DiscoveryInfoType | None = None,
-):
-    """Setup the sensor platform."""
-    if DOMAIN in hass.data:
-        reader = hass.data[DOMAIN]["apiReader"]
-        async_add_entities([calendarific(config, reader)], True)
-
-
 async def async_setup_entry(
     hass: HomeAssistant,
-    entry: ConfigEntry,
+    config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    """Setup sensor platform."""
-    if DOMAIN in hass.data:
-        reader = hass.data[DOMAIN]["apiReader"]
-        async_add_entities(
-            [calendarific(entry.data, reader)],
-            False,
-        )
-    return True
+    """Setup sensor entry."""
+
+    coordinator = hass.data[DOMAIN][config_entry.entry_id][CONF_COORDINATOR]
+    config = hass.data.get(DOMAIN).get(config_entry.entry_id)
+    async_add_entities(Calendarific(config, coordinator))
 
 
-class calendarific(SensorEntity):
-    def __init__(self, config, reader):
+class Calendarific(CoordinatorEntity[CalendarificCoordinator], SensorEntity):
+    """An entity using CoordinatorEntity.
+
+    The CoordinatorEntity class provides:
+      should_poll
+      async_update
+      async_added_to_hass
+      available
+
+    """
+
+    def __init__(self, config, coordinator: CalendarificCoordinator):
         """Initialize the sensor."""
+
+        super().__init__(coordinator)
 
         # self._attr_device_class = SensorDeviceClass.DURATION
         self._attr_state_class = SensorStateClass.MEASUREMENT
         self._attr_native_unit_of_measurement = UnitOfTime.DAYS
         self._attr_suggested_unit_of_measurement = UnitOfTime.DAYS
-        self.config = config
+        self._config = config
         self._attr_unique_id = config.get("unique_id", None)
         self._holiday = config.get(CONF_HOLIDAY)
         self._attr_name = config.get(CONF_NAME)
@@ -78,9 +77,9 @@ class calendarific(SensorEntity):
         self._soon = config.get(CONF_SOON)
         self._date_format = config.get(CONF_DATE_FORMAT)
         self._attr_icon = self._icon_normal
-        self._reader = reader
-        self._description = self._reader.get_description(self._holiday)
-        self._date = self._reader.get_date(self._holiday)
+        self._coordinator = coordinator
+        self._description = self._coordinator.get_description(self._holiday)
+        self._date = self._coordinator.get_date(self._holiday)
         if not self._date or self._date == "-":
             self._attr_date = self._date
         else:
@@ -96,6 +95,12 @@ class calendarific(SensorEntity):
             ATTR_DESCRIPTION: self._description,
             ATTR_ATTRIBUTION: ATTRIBUTION,
         }
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._attr_is_on = self.coordinator.data[self.idx]["state"]
+        self.async_write_ha_state()
 
     async def async_added_to_hass(self):
         """Once the entity is added we should update to get the initial data loaded. Then add it to the Calendar."""
@@ -135,10 +140,10 @@ class calendarific(SensorEntity):
         # _LOGGER.debug(f"Remaining Calendar Entries: {self.hass.data[DOMAIN][CALENDAR_PLATFORM]}")
 
     async def async_update(self):
-        await self.hass.async_add_executor_job(self._reader.update)
+        await self.hass.async_add_executor_job(self._coordinator.update)
         _LOGGER.debug(f"Update: {self._attr_name}")
-        self._description = self._reader.get_description(self._holiday)
-        self._date = self._reader.get_date(self._holiday)
+        self._description = self._coordinator.get_description(self._holiday)
+        self._date = self._coordinator.get_date(self._holiday)
         # _LOGGER.debug(f"[Update] Date: {self._date}")
         # _LOGGER.debug(f"[Update] Date Type: {type(self._date)}")
         if not self._date or self._date == "-":

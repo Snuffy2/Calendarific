@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from homeassistant.const import Platform
 
 """ Constants """
@@ -10,6 +12,7 @@ ISSUE_URL = "https://github.com/Snuffy2/Calendarific/issues"
 ATTRIBUTION = "Data provided by calendarific.com"
 SENSOR_PLATFORM = Platform.SENSOR
 CALENDAR_PLATFORM = Platform.CALENDAR
+SCAN_INTERVAL = timedelta(seconds=30)
 
 # Configuration
 CONF_API_KEY = "api_key"
@@ -23,6 +26,7 @@ CONF_DATE_FORMAT = "date_format"
 CONF_SOON = "days_as_soon"
 CONF_HOLIDAY = "holiday"
 CONF_UNIT_OF_MEASUREMENT = "unit_of_measurement"
+CONF_COORDINATOR = "coordinator"
 
 # Defaults
 DEFAULT_ICON_NORMAL = "mdi:calendar-blank"
