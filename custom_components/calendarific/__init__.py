@@ -66,6 +66,7 @@ async def async_unload_entry(hass, entry):
 
 class CalendarificApiReader:
     def __init__(self, api_key, country, state):
+        self._api_count = 0
         self._country = country
         self._state = state
         self._api_key = api_key
@@ -134,6 +135,8 @@ class CalendarificApiReader:
         params = {"country": self._country, "year": year, "location": self._state}
         calapi = calendarificAPI(self._api_key)
         response = calapi.holidays(params)
+        self._api_count += 1
+        _LOGGER.debug(f"API Count: {self._api_count}")
         _LOGGER.info("Updating from Calendarific api")
         if "error" in response:
             if not self._error_logged:
@@ -144,6 +147,8 @@ class CalendarificApiReader:
         _LOGGER.debug(f"API Holidays: {self._holidays}")
         params["year"] = year + 1
         response = calapi.holidays(params)
+        self._api_count += 1
+        _LOGGER.debug(f"API Count: {self._api_count}")
         if "error" in response:
             if not self._error_logged:
                 _LOGGER.error(response["meta"]["error_detail"])
