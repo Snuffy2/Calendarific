@@ -12,7 +12,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import selector
 
-from . import holiday_list
+from . import holiday_dict
 from .const import (
     CONF_DATE_FORMAT,
     CONF_HOLIDAY,
@@ -39,10 +39,6 @@ SOON_MIN = 0
 SOON_MAX = 364
 DATE_FORMAT_OPTIONS = [
     selector.SelectOptionDict(
-        value="%Y-%m-%d",
-        label=f"{TODAY.strftime('%Y-%m-%d')} (%Y-%m-%d) WARNING: May show a day off",
-    ),
-    selector.SelectOptionDict(
         value="%x", label=f"{TODAY.strftime('%x')} (%x) Locale’s appropriate date"
     ),
     selector.SelectOptionDict(
@@ -52,7 +48,20 @@ DATE_FORMAT_OPTIONS = [
         value="%A, %B %-d, %Y",
         label=f"{TODAY.strftime('%A, %B %-d, %Y')} (%A, %B %-d, %Y)",
     ),
+    selector.SelectOptionDict(
+        value="%Y-%m-%d",
+        label=f"{TODAY.strftime('%Y-%m-%d')} (%Y-%m-%d) WARNING: May show a day off",
+    ),
 ]
+
+HOLIDAY_LIST = []
+for key, value in holiday_dict.items():
+    HOLIDAY_LIST.append(
+        selector.SelectOptionDict(
+            value=key,
+            label=value,
+        )
+    )
 
 
 @callback
@@ -67,7 +76,7 @@ class CalendarificConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # self.unique_id = str(uuid.uuid4())
 
     async def async_step_user(self, user_input=None) -> FlowResult:
-        if holiday_list == []:
+        if holiday_dict == {}:
             return self.async_abort(reason="no_holidays_found")
         self._errors = {}
         if user_input is not None:
@@ -83,7 +92,7 @@ class CalendarificConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             {
                 vol.Required(CONF_HOLIDAY): selector.SelectSelector(
                     selector.SelectSelectorConfig(
-                        options=holiday_list,
+                        options=HOLIDAY_LIST,
                         multiple=False,
                         custom_value=False,
                         mode=selector.SelectSelectorMode.DROPDOWN,
