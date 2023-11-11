@@ -5,10 +5,10 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from homeassistant.components.calendar import CalendarEntity, CalendarEvent
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.util import Throttle
 
 from .const import (
@@ -17,11 +17,10 @@ from .const import (
     CALENDAR_PLATFORM,
     DOMAIN,
     SENSOR_PLATFORM,
+    THROTTLE_INTERVAL,
 )
 
 _LOGGER = logging.getLogger(__name__)
-
-MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=1)
 
 
 async def async_setup_platform(
@@ -133,7 +132,8 @@ class EntitiesCalendarData:
                 events.append(event)
         return events
 
-    @Throttle(MIN_TIME_BETWEEN_UPDATES)
+    @Throttle(THROTTLE_INTERVAL)
+    @callback
     async def async_update(self) -> None:
         """Get the latest data."""
         for ent in self.entities:

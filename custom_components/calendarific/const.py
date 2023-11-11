@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from homeassistant.const import Platform
 
 """ Constants """
@@ -10,6 +12,7 @@ ISSUE_URL = "https://github.com/Snuffy2/Calendarific/issues"
 ATTRIBUTION = "Data provided by calendarific.com"
 SENSOR_PLATFORM = Platform.SENSOR
 CALENDAR_PLATFORM = Platform.CALENDAR
+THROTTLE_INTERVAL = timedelta(hours=1)
 
 # Configuration
 CONF_API_KEY = "api_key"

@@ -4,7 +4,9 @@ from datetime import date
 
 from homeassistant.components.sensor import SensorEntity, SensorStateClass
 from homeassistant.const import ATTR_ATTRIBUTION, CONF_NAME, UnitOfTime
+from homeassistant.core import callback
 from homeassistant.helpers.discovery import async_load_platform
+from homeassistant.util import Throttle
 
 from .calendar import EntitiesCalendarData
 from .const import (
@@ -22,6 +24,7 @@ from .const import (
     CONF_SOON,
     DOMAIN,
     SENSOR_PLATFORM,
+    THROTTLE_INTERVAL,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -121,6 +124,8 @@ class calendarific(SensorEntity):
         self.hass.data[DOMAIN][CALENDAR_PLATFORM].remove_entity(self.entity_id)
         # _LOGGER.debug(f"Remaining Calendar Entries: {self.hass.data[DOMAIN][CALENDAR_PLATFORM]}")
 
+    @Throttle(THROTTLE_INTERVAL)
+    @callback
     async def async_update(self):
         await self.hass.async_add_executor_job(self._reader.update)
         _LOGGER.debug(f"[Sensor Update] {self._attr_name}")
