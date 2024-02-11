@@ -2,7 +2,11 @@
 import logging
 from datetime import date
 
-from homeassistant.components.sensor import SensorEntity, SensorStateClass
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorStateClass,
+)
 from homeassistant.const import ATTR_ATTRIBUTION, CONF_NAME, UnitOfTime
 from homeassistant.core import callback
 from homeassistant.helpers.discovery import async_load_platform
@@ -52,7 +56,7 @@ class calendarific(SensorEntity):
     def __init__(self, config, reader):
         """Initialize the sensor."""
 
-        # self._attr_device_class = SensorDeviceClass.DURATION
+        self._attr_device_class = SensorDeviceClass.DURATION
         self._attr_state_class = SensorStateClass.MEASUREMENT
         self._attr_native_unit_of_measurement = UnitOfTime.DAYS
         self._attr_suggested_unit_of_measurement = UnitOfTime.DAYS
