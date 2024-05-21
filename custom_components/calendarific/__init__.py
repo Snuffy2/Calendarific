@@ -1,4 +1,5 @@
 """Calendarific Platform"""
+
 import json
 import logging
 from datetime import date, datetime
@@ -7,7 +8,7 @@ import homeassistant.helpers.config_validation as cv
 import requests
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.typing import HomeAssistantType
+from homeassistant.core import HomeAssistant
 
 from .const import (
     ATTR_DATE,
@@ -52,7 +53,7 @@ def setup(hass, config):
     return True
 
 
-async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry):
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     hass.async_create_task(
         hass.config_entries.async_forward_entry_setup(entry, SENSOR_PLATFORM)
     )
